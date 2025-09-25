@@ -3,6 +3,8 @@ from groq import Groq
 import os
 from dotenv import load_dotenv
 import asyncio
+from flask import Flask
+from threading import Thread
 
 # .envファイルから環境変数を読み込む
 load_dotenv()
@@ -89,6 +91,21 @@ async def generate_response(prompt, channel):
         
         # 切り替え後のAPIでもエラーが続くか、キーが1つしかない場合
         return "ごめん、ちょっと考え中..."
+
+app = Flask(__name__)
+
+@app.route('/')
+def hello_world():
+    return 'KAZ is alive!'
+
+def run_web_server():
+    # KoyebはPORT環境変数で待ち受けポートを指定してくるので、それに従う
+    port = int(os.environ.get('PORT', 8000))
+    app.run(host='0.0.0.0', port=port)
+
+def keep_alive():
+    t = Thread(target=run_web_server)
+    t.start()
 
 # ボット起動時の処理
 @client.event
