@@ -42,7 +42,7 @@ MENTION_REQUIRED = False
 async def get_groq_messages(channel, current_prompt):
     # 直近8件のメッセージ履歴を取得（ユーザーとボットの会話4往復分を想定）
     # history()は最新のメッセージから取得される
-    messages_history = await channel.history(limit=8).flatten()
+    messages_history = [msg async for msg in channel.history(limit=8)]
     
     # 履歴を古い順に並び替え、システムプロンプトから始める
     messages_history.reverse()
