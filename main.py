@@ -10,11 +10,12 @@ load_dotenv()
 # 複数のAPIキーをリストで取得し設定
 GROQ_API_KEYS = [os.getenv('GROQ_API_KEY1'), os.getenv('GROQ_API_KEY2')]
 DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
+KAZ_CONTEXT = os.getenv('KAZ_CONTEXT')
 current_key_index = 0
 
 # 必要なAPIキーが存在するか確認
-if not GROQ_API_KEYS[0] or not DISCORD_TOKEN:
-    print("エラー: DISCORD_TOKEN または GROQ_API_KEY1 が設定されていません。")
+if not all([GROQ_API_KEYS[0], DISCORD_TOKEN, KAZ_CONTEXT]):
+    print("エラー: DISCORD_TOKEN または GROQ_API_KEY1 または KAZ_CONTEXT が設定されていません。")
     exit()
 
 # Groqクライアントの初期化関数
@@ -35,10 +36,6 @@ client = discord.Client(intents=intents)
 
 # メンション必須フラグ
 MENTION_REQUIRED = False
-
-# コンテキスト（ペルソナ、発言例、繰り返し防止指示）
-KAZ_CONTEXT = """
-"""
 
 # 過去の会話を取得し、Groq APIへのメッセージ形式に変換する関数
 # ボットのスリープ後もDiscordの履歴から会話を取得
